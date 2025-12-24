@@ -129,3 +129,40 @@ Sources BigQuery
 - Join the [chat](https://community.getdbt.com/) on Slack for live discussions and support
 - Find [dbt events](https://events.getdbt.com) near you
 - Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+
+## flowchart LR
+  %% Global dbt + BigQuery architecture (Sources → Staging → Marts → BI)
+
+  subgraph BQ["BigQuery"]
+    subgraph RAW["Sources (Raw / Landing)"]
+      R1[(raw_* tables)]
+      R2[(external sources / ingestion)]
+    end
+
+    subgraph STG["dbt Staging (stg_*)"]
+      S1[[stg_* views]]
+    end
+
+    subgraph MARTS["dbt Marts (dim_* / fct_*)"]
+      D1[(dim_* tables)]
+      F1[(fct_* tables)]
+    end
+  end
+
+  subgraph BI["BI / Consumption"]
+    BI1[Looker / Power BI / Tableau]
+    BI2[Notebooks / Data Science]
+    BI3[Exports / APIs]
+  end
+
+  R1 --> S1
+  R2 --> S1
+  S1 --> D1
+  S1 --> F1
+  D1 --> BI1
+  F1 --> BI1
+  D1 --> BI2
+  F1 --> BI2
+  D1 --> BI3
+  F1 --> BI3
+
